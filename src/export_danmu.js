@@ -1,4 +1,4 @@
-import { hookSetter, $ } from './utils'
+import { hookSetter, saveTextAsFile, $ } from './utils'
 
 //extra: add a button to download danmu as json file
 hookSetter(animefun, 'danmu', danmu => {
