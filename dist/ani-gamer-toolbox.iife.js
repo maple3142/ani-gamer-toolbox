@@ -31,8 +31,20 @@ function cvtM3U8_to_playlist(baseurl) {
     return pls;
   };
 }
-
-
+function triggerDownload(url, fname) {
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = fname;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+function saveTextAsFile(text, fname) {
+  var blob = new Blob([text]);
+  var url = URL.createObjectURL(blob);
+  triggerDownload(url, fname);
+  URL.revokeObjectURL(url);
+}
 var $ = jQuery;
 
 requirejs.config({
@@ -49,7 +61,7 @@ requirejs.config({
   }
 });
 requirejs(['order!videojs'], function (videojs) {
-  return hookSetter(videojs.players, 'ani_video', function onAniVideo(vid) {
+  return hookSetter(videojs.players, 'ani_video', function (vid) {
     window.ani_video = vid; //EXPOSE
 
     hookSetter(vid.K, 'src', onPlaylistUrl);
