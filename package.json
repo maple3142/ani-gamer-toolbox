@@ -1,0 +1,13 @@
+{
+	"name": "ani-gamer-toolbox",
+	"version": "1.0.0",
+	"main": "index.js",
+	"license": "MIT",
+	"devDependencies": {
+		"bili": "^3.0.4",
+		"rollup-plugin-userscript-metablock": "^0.1.0"
+	},
+	"scripts": {
+		"build": "bili"
+	}
+}
