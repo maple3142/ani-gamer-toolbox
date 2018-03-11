@@ -15,7 +15,7 @@ requirejs.config({
 	}
 })
 requirejs(['order!videojs'], videojs =>
-	hookSetter(videojs.players, 'ani_video', function onAniVideo(vid) {
+	hookSetter(videojs.players, 'ani_video', vid => {
 		window.ani_video = vid //EXPOSE
 		hookSetter(vid.K, 'src', onPlaylistUrl)
 	})
