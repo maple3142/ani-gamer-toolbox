@@ -54,7 +54,6 @@ requirejs.config({
     order: 'js/order'
   },
   shim: {
-    viblast: {},
     vastvpaid: {
       deps: ['videojs']
     }
