@@ -1,5 +1,7 @@
 # 動畫瘋工具箱
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/maple3142/ani-gamer-toolbox.svg)](https://greenkeeper.io/)
+
 [Greasy Fork](https://greasyfork.org/zh-TW/scripts/39136-%E5%8B%95%E7%95%AB%E7%98%8B%E5%B7%A5%E5%85%B7%E7%AE%B1)
 [GitHub](https://github.com/maple3142/ani-gamer-toolbox)
 
