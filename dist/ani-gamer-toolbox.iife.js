@@ -2,7 +2,7 @@
 // @name        動畫瘋工具箱
 // @namespace   https://blog.maple3142.net/
 // @description 取得動畫的 m3u8 網址，下載彈幕為 json，去除擋廣告的警告訊息
-// @version     0.5
+// @version     0.6
 // @author      maple3142
 // @match       https://ani.gamer.com.tw/animeVideo.php?sn=*
 // @require     https://cdn.jsdelivr.net/npm/m3u8-parser@4.2.0/dist/m3u8-parser.min.js
@@ -13,9 +13,20 @@
 'use strict';
 
 function hookSetter(obj, prop, cb) {
+  var value,
+      canceled = false;
   Object.defineProperty(obj, prop, {
-    set: cb
+    set: function set(v) {
+      value = v;
+      if (!canceled) cb(v);
+    },
+    get: function get() {
+      return value;
+    }
   });
+  return function () {
+    return canceled = true;
+  };
 }
 function cvtM3U8_to_playlist(baseurl) {
   return function (m3u8) {
@@ -89,12 +100,13 @@ function onPlaylistUrl(playlisturl) {
   .then(render);
 }
 
-hookSetter(animefun, 'danmu', function (danmu) {
+var restore = hookSetter(animefun, 'danmu', function (danmu) {
   var text = JSON.stringify(danmu);
   var title = $('.anime_name h1').text();
   $('.anime_name').append($('<a href="javascript:void(0)">把彈幕存成檔案</a>').on('click', function () {
     saveTextAsFile(text, "".concat(title, "_\u5F48\u5E55.json"));
   }));
+  restore();
 });
 
 //extra: block anti adblock alert

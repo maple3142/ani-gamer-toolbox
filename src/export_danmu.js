@@ -1,7 +1,7 @@
 import { hookSetter, saveTextAsFile, $ } from './utils'
 
 //extra: add a button to download danmu as json file
-hookSetter(animefun, 'danmu', danmu => {
+const restore = hookSetter(animefun, 'danmu', danmu => {
 	const text = JSON.stringify(danmu)
 	const title = $('.anime_name h1').text()
 	$('.anime_name').append(
@@ -9,4 +9,5 @@ hookSetter(animefun, 'danmu', danmu => {
 			saveTextAsFile(text, `${title}_彈幕.json`)
 		})
 	)
+	restore()
 })

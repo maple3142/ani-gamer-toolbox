@@ -1,7 +1,14 @@
 export function hookSetter(obj, prop, cb) {
+	let value,
+		canceled = false
 	Object.defineProperty(obj, prop, {
-		set: cb
+		set: v => {
+			value = v
+			if (!canceled) cb(v)
+		},
+		get: () => value
 	})
+	return () => (canceled = true)
 }
 export function cvtM3U8_to_playlist(baseurl) {
 	return m3u8 => {
