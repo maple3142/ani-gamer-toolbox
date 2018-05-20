@@ -103,9 +103,10 @@ function onPlaylistUrl(playlisturl) {
 var restore = hookSetter(animefun, 'danmu', function (danmu) {
   var text = JSON.stringify(danmu);
   var title = $('.anime_name h1').text();
-  $('.anime_name').append($('<a href="javascript:void(0)">把彈幕存成檔案</a>').on('click', function () {
+  $('.anime_name').append($('<a>').on('click', function (e) {
+    e.preventDefault();
     saveTextAsFile(text, "".concat(title, "_\u5F48\u5E55.json"));
-  }));
+  }).text('把彈幕存成檔案').css('display', 'block'));
   restore();
 });
 
@@ -116,5 +117,11 @@ alert = function alert(t) {
   if (t.includes('由於擋廣告插件會影響播放器運作')) return;
   orig_alert(t);
 };
+
+$('.anime_name').append($('<a>').on('click', function (e) {
+  e.preventDefault();
+  ani_video.total_time = 1000;
+  ani_video.currentTime(ani_video.duration());
+}).text('直接顯示動漫通問題').css('display', 'block'));
 
 }());
