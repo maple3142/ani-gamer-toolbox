@@ -3,6 +3,8 @@
 [Greasy Fork](https://greasyfork.org/zh-TW/scripts/39136-%E5%8B%95%E7%95%AB%E7%98%8B%E5%B7%A5%E5%85%B7%E7%AE%B1)
 [GitHub](https://github.com/maple3142/ani-gamer-toolbox)
 
+![效果](https://i.imgur.com/1kDtN66.png)
+
 ## 取得動畫 m3u8 網址
 
 範例: [魔法使的新娘 21](https://ani.gamer.com.tw/animeVideo.php?sn=9579)
@@ -21,3 +23,13 @@ ffmpeg 下載指令: `ffmpeg -i "複製來的 m3u8 網址" -c copy "輸出的檔
 
 在偵測到廣告阻擋器(adb,ublock 之類的)時動畫瘋會有個警告，要求關閉廣告阻擋
 這個在安裝插件後會自動被阻擋
+
+## 直接顯示動漫通問題
+
+在廣告結束後點一下就會自動跳到影片最尾端，然後顯示出問題
+
+接下來到粉絲專頁去找到答案回答就能拿到巴幣了
+
+## 範例: 使用 vlc 看 GGO 外傳第二集
+
+![](https://i.imgur.com/PxUiyhh.png)
