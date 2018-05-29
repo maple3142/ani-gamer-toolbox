@@ -5,7 +5,7 @@
 // @version     0.7.1
 // @author      maple3142
 // @match       https://ani.gamer.com.tw/animeVideo.php?sn=*
-// @connect     https://home.gamer.com.tw/*
+// @connect     home.gamer.com.tw
 // @require     https://cdn.jsdelivr.net/npm/m3u8-parser@4.2.0/dist/m3u8-parser.min.js
 // @grant       GM_xmlhttpRequest
 // @grant       unsafeWindow
