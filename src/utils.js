@@ -36,4 +36,15 @@ export function saveTextAsFile(text, fname) {
 	triggerDownload(url, fname)
 	URL.revokeObjectURL(url)
 }
+export function getCORS(url) {
+	return new Promise((res, rej) => {
+		GM_xmlhttpRequest({
+			method: 'GET',
+			url,
+			responseType: 'text',
+			onload: r => res(r.response),
+			onerror: rej
+		})
+	})
+}
 export const $ = jQuery

@@ -6,7 +6,8 @@
 // @author      maple3142
 // @match       https://ani.gamer.com.tw/animeVideo.php?sn=*
 // @require     https://cdn.jsdelivr.net/npm/m3u8-parser@4.2.0/dist/m3u8-parser.min.js
-// @grant       none
+// @grant       GM_xmlhttpRequest
+// @grant       unsafeWindow
 // ==/UserScript==
 
 (function () {
@@ -55,6 +56,19 @@ function saveTextAsFile(text, fname) {
   var url = URL.createObjectURL(blob);
   triggerDownload(url, fname);
   URL.revokeObjectURL(url);
+}
+function getCORS(url) {
+  return new Promise(function (res, rej) {
+    GM_xmlhttpRequest({
+      method: 'GET',
+      url: url,
+      responseType: 'text',
+      onload: function onload(r) {
+        return res(r.response);
+      },
+      onerror: rej
+    });
+  });
 }
 var $ = jQuery;
 
@@ -113,15 +127,35 @@ var restore = hookSetter(animefun, 'danmu', function (danmu) {
 //extra: block anti adblock alert
 var orig_alert = alert;
 
-alert = function alert(t) {
+unsafeWindow.alert = function (t) {
   if (t.includes('由於擋廣告插件會影響播放器運作')) return;
   orig_alert(t);
 };
 
+var hurl = 'https://home.gamer.com.tw/creationCategory.php?owner=blackxblue&c=370818';
 $('.anime_name').append($('<a>').on('click', function (e) {
   e.preventDefault();
   ani_video.total_time = 1000;
   ani_video.currentTime(ani_video.duration());
-}).text('直接顯示動漫通問題').css('display', 'block'));
+}).text('直接顯示動漫通問題').css('display', 'block')).append($('<a>').on('click', function (e) {
+  getCORS(hurl).then(function (ht) {
+    var $h = $(ht);
+    var url = $h.find('.TS1').toArray().filter(function (x) {
+      return new RegExp('\\d{2}/' + new Date().getDate()).test(x.textContent);
+    }).map(function (x) {
+      return x.getAttribute('href');
+    })[0];
+    if (!url) throw new Error('No url found.');
+    return getCORS('https://home.gamer.com.tw/' + url);
+  }).then(function (ht) {
+    var $h = $(ht);
+    return /A:(\d)/.exec($h.find('.MSG-list8C').find('div').text())[1];
+  }).then(function (ans) {
+    alert('答案可能是 ' + ans);
+  }).catch(function (err) {
+    console.error(err);
+    alert('抓取答案失敗，建議去官方粉絲團尋找答案');
+  });
+}).text('試著從 blackxblue 小屋中抓取答案(實驗性)').css('display', 'block'));
 
 }());
