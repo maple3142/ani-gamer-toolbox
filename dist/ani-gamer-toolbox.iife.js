@@ -2,7 +2,7 @@
 // @name        動畫瘋工具箱
 // @namespace   https://blog.maple3142.net/
 // @description 取得動畫的 m3u8 網址，下載彈幕為 json，去除擋廣告的警告訊息
-// @version     0.7.1
+// @version     0.7.2
 // @author      maple3142
 // @match       https://ani.gamer.com.tw/animeVideo.php?sn=*
 // @connect     home.gamer.com.tw
@@ -142,7 +142,7 @@ $('.anime_name').append($('<a>').on('click', function (e) {
   getCORS(hurl).then(function (ht) {
     var $h = $(ht);
     var url = $h.find('.TS1').toArray().filter(function (x) {
-      return new RegExp('\\d{2}/' + new Date().getDate()).test(x.textContent);
+      return new RegExp('\\d{2}/' + new Date().getDate().toString().padStart(2, '0')).test(x.textContent);
     }).map(function (x) {
       return x.getAttribute('href');
     })[0];

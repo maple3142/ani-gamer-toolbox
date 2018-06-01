@@ -22,7 +22,15 @@ $('.anime_name')
 						const url = $h
 							.find('.TS1')
 							.toArray()
-							.filter(x => new RegExp('\\d{2}/' + new Date().getDate()).test(x.textContent))
+							.filter(x =>
+								new RegExp(
+									'\\d{2}/' +
+										new Date()
+											.getDate()
+											.toString()
+											.padStart(2, '0')
+								).test(x.textContent)
+							)
 							.map(x => x.getAttribute('href'))[0]
 						if (!url) throw new Error('No url found.')
 						return getCORS('https://home.gamer.com.tw/' + url)
