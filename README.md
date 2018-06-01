@@ -30,6 +30,15 @@ ffmpeg 下載指令: `ffmpeg -i "複製來的 m3u8 網址" -c copy "輸出的檔
 
 接下來到粉絲專頁去找到答案回答就能拿到巴幣了
 
+## 實驗性功能: 從 blackxblue 小屋中抓取答案
+
+在
+
+[https://home.gamer.com.tw/creationCategory.php?owner=blackxblue&c=370818](https://home.gamer.com.tw/creationCategory.php?owner=blackxblue&c=370818)
+
+之中可以看到很多每日的答案，每天的格式也差不多
+所以就弄了一個小功能是從他的小屋取得本日答案，但是不保證正確性
+
 ## 範例: 使用 vlc 看 GGO 外傳第二集
 
 ![](https://i.imgur.com/PxUiyhh.png)
