@@ -2,7 +2,7 @@
 // @name        動畫瘋工具箱
 // @namespace   https://blog.maple3142.net/
 // @description 取得動畫的 m3u8 網址，下載彈幕為 json，去除擋廣告的警告訊息
-// @version     0.7.2
+// @version     0.7.3
 // @author      maple3142
 // @match       https://ani.gamer.com.tw/animeVideo.php?sn=*
 // @connect     home.gamer.com.tw
@@ -87,7 +87,7 @@ requirejs.config({
 });
 requirejs(['order!videojs'], function (videojs) {
   return hookSetter(videojs.players, 'ani_video', function (vid) {
-    window.ani_video = vid; //EXPOSE
+    unsafeWindow.ani_video = vid; //EXPOSE
 
     hookSetter(vid.K, 'src', onPlaylistUrl);
   });
@@ -106,11 +106,11 @@ function onPlaylistUrl(playlisturl) {
     return;
   }
 
-  var baseurl = playlisturl.replace(/index\.m3u8.*/, '');
+  var baseurl = playlisturl.replace(/playlist\.m3u8.*/, '');
   fetch(playlisturl).then(function (r) {
     return r.text();
   }).then(cvtM3U8_to_playlist(baseurl)).then(function (pls) {
-    return window.M3U8_PLAYLIST = pls;
+    return window.unsafeWindow = pls;
   }) //EXPOSE
   .then(render);
 }

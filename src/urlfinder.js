@@ -15,7 +15,7 @@ requirejs.config({
 })
 requirejs(['order!videojs'], videojs =>
 	hookSetter(videojs.players, 'ani_video', vid => {
-		window.ani_video = vid //EXPOSE
+		unsafeWindow.ani_video = vid //EXPOSE
 		hookSetter(vid.K, 'src', onPlaylistUrl)
 	})
 )
@@ -36,10 +36,10 @@ function onPlaylistUrl(playlisturl) {
 		//is ad
 		return
 	}
-	const baseurl = playlisturl.replace(/index\.m3u8.*/, '')
+	const baseurl = playlisturl.replace(/playlist\.m3u8.*/, '')
 	fetch(playlisturl)
 		.then(r => r.text())
 		.then(cvtM3U8_to_playlist(baseurl))
-		.then(pls => (window.M3U8_PLAYLIST = pls)) //EXPOSE
+		.then(pls => (window.unsafeWindow = pls)) //EXPOSE
 		.then(render)
 }
