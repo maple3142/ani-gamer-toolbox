@@ -14,6 +14,7 @@
 (function () {
 'use strict';
 
+var $ = jQuery;
 function hookSetter(obj, prop, cb) {
   var value,
       canceled = false;
@@ -71,7 +72,40 @@ function getCORS(url) {
     });
   });
 }
-var $ = jQuery;
+var hurl = 'https://home.gamer.com.tw/creationCategory.php?owner=blackxblue&c=370818';
+function getTodayAnswer() {
+  return getCORS(hurl).then(function (ht) {
+    var $h = $(ht);
+    var url = $h.find('.TS1').toArray().filter(function (x) {
+      return new RegExp('\\d{2}/' + new Date().getDate().toString().padStart(2, '0')).test(x.textContent);
+    }).map(function (x) {
+      return x.getAttribute('href');
+    })[0];
+    if (!url) throw new Error('No url found.');
+    return getCORS('https://home.gamer.com.tw/' + url);
+  }).then(function (ht) {
+    var $h = $(ht);
+    return /A:(\d)/.exec($h.find('.MSG-list8C').find('div').text())[1];
+  });
+}
+function getQuestion() {
+  return Promise.resolve($.ajax({
+    url: '/ajax/animeGetQuestion.php',
+    data: 't=' + Date.now()
+  })).then(JSON.parse);
+}
+function answerQuestion(t) {
+  return getQuestion().then(function (obj) {
+    return $.ajax({
+      type: 'POST',
+      url: '/ajax/animeAnsQuestion.php',
+      data: 'token=' + obj.token + '&ans=' + t + '&t=' + Date.now()
+    });
+  }).then(JSON.parse).then(function (o) {
+    if (o.error || o.msg === '答題錯誤') throw o;
+    return o;
+  });
+}
 
 requirejs.config({
   baseUrl: '//i2.bahamut.com.tw',
@@ -133,30 +167,24 @@ unsafeWindow.alert = function (t) {
   orig_alert(t);
 };
 
-var hurl = 'https://home.gamer.com.tw/creationCategory.php?owner=blackxblue&c=370818';
 $('.anime_name').append($('<a>').on('click', function (e) {
   e.preventDefault();
   ani_video.total_time = 1000;
   ani_video.currentTime(ani_video.duration());
 }).text('直接顯示動漫通問題').css('display', 'block')).append($('<a>').on('click', function (e) {
-  getCORS(hurl).then(function (ht) {
-    var $h = $(ht);
-    var url = $h.find('.TS1').toArray().filter(function (x) {
-      return new RegExp('\\d{2}/' + new Date().getDate().toString().padStart(2, '0')).test(x.textContent);
-    }).map(function (x) {
-      return x.getAttribute('href');
-    })[0];
-    if (!url) throw new Error('No url found.');
-    return getCORS('https://home.gamer.com.tw/' + url);
-  }).then(function (ht) {
-    var $h = $(ht);
-    return /A:(\d)/.exec($h.find('.MSG-list8C').find('div').text())[1];
-  }).then(function (ans) {
+  getTodayAnswer().then(function (ans) {
     alert('答案可能是 ' + ans);
   }).catch(function (err) {
     console.error(err);
     alert('抓取答案失敗，建議去官方粉絲團尋找答案');
   });
-}).text('試著從 blackxblue 小屋中抓取答案(實驗性)').css('display', 'block'));
+}).text('試著從 blackxblue 小屋中抓取答案(實驗性)').css('display', 'block')).append($('<a>').on('click', function (e) {
+  getTodayAnswer().then(answerQuestion).then(function (result) {
+    alert("\u7B54\u984C\u6210\u529F: ".concat(result.gift));
+  }).catch(function (err) {
+    console.error(err);
+    alert("\u56DE\u7B54\u554F\u984C\u5931\u6557: ".concat(err.msg));
+  });
+}).text('直接回答問題(實驗性)').css('display', 'block'));
 
 }());

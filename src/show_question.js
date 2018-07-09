@@ -1,6 +1,4 @@
-import { $, getCORS } from './utils'
-
-const hurl = 'https://home.gamer.com.tw/creationCategory.php?owner=blackxblue&c=370818'
+import { $, answerQuestion, getTodayAnswer } from './utils'
 
 $('.anime_name')
 	.append(
@@ -16,34 +14,7 @@ $('.anime_name')
 	.append(
 		$('<a>')
 			.on('click', e => {
-				getCORS(hurl)
-					.then(ht => {
-						const $h = $(ht)
-						const url = $h
-							.find('.TS1')
-							.toArray()
-							.filter(x =>
-								new RegExp(
-									'\\d{2}/' +
-										new Date()
-											.getDate()
-											.toString()
-											.padStart(2, '0')
-								).test(x.textContent)
-							)
-							.map(x => x.getAttribute('href'))[0]
-						if (!url) throw new Error('No url found.')
-						return getCORS('https://home.gamer.com.tw/' + url)
-					})
-					.then(ht => {
-						const $h = $(ht)
-						return /A:(\d)/.exec(
-							$h
-								.find('.MSG-list8C')
-								.find('div')
-								.text()
-						)[1]
-					})
+				getTodayAnswer()
 					.then(ans => {
 						alert('答案可能是 ' + ans)
 					})
@@ -53,5 +24,21 @@ $('.anime_name')
 					})
 			})
 			.text('試著從 blackxblue 小屋中抓取答案(實驗性)')
+			.css('display', 'block')
+	)
+	.append(
+		$('<a>')
+			.on('click', e => {
+				getTodayAnswer()
+					.then(answerQuestion)
+					.then(result => {
+						alert(`答題成功: ${result.gift}`)
+					})
+					.catch(err => {
+						console.error(err)
+						alert(`回答問題失敗: ${err.msg}`)
+					})
+			})
+			.text('直接回答問題(實驗性)')
 			.css('display', 'block')
 	)
