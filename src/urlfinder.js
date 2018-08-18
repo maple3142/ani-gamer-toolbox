@@ -1,5 +1,6 @@
 import { hookSetter, cvtM3U8_to_playlist, $ } from './utils'
 
+export const m3u8container = $('<div>').addClass('anig-ct')
 //in order to get videojs instance
 requirejs.config({
 	baseUrl: '//i2.bahamut.com.tw',
@@ -20,15 +21,14 @@ requirejs(['order!videojs'], videojs =>
 	})
 )
 function render(pls) {
-	const html = pls
-		.map(
-			pl =>
-				`<div><label for="${pl.res.height}p">${pl.res.height}P: </label><input id="${pl.res.height}p" value="${
-					pl.url
-				}" style="width: 500px;"></div>`
-		)
-		.join('')
-	$('.anime_name').append(`<div id="anigamer_m3u8_warpper">${html}</div>`)
+	pls.map(pl =>
+		$('<a>')
+			.addClass('anig-tb')
+			.addClass('tdn')
+			.text(pl.res.height + 'p')
+			.attr('href', pl.url)
+			.attr('target', '_blank')
+	).forEach(el => m3u8container.append(el))
 }
 
 function onPlaylistUrl(playlisturl) {

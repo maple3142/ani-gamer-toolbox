@@ -107,6 +107,8 @@ function answerQuestion(t) {
   });
 }
 
+var m3u8container = $('<div>').addClass('anig-ct'); //in order to get videojs instance
+
 requirejs.config({
   baseUrl: '//i2.bahamut.com.tw',
   waitSeconds: 0,
@@ -128,10 +130,11 @@ requirejs(['order!videojs'], function (videojs) {
 });
 
 function render(pls) {
-  var html = pls.map(function (pl) {
-    return "<div><label for=\"".concat(pl.res.height, "p\">").concat(pl.res.height, "P: </label><input id=\"").concat(pl.res.height, "p\" value=\"").concat(pl.url, "\" style=\"width: 500px;\"></div>");
-  }).join('');
-  $('.anime_name').append("<div id=\"anigamer_m3u8_warpper\">".concat(html, "</div>"));
+  pls.map(function (pl) {
+    return $('<a>').addClass('anig-tb').addClass('tdn').text(pl.res.height + 'p').attr('href', pl.url).attr('target', '_blank');
+  }).forEach(function (el) {
+    return m3u8container.append(el);
+  });
 }
 
 function onPlaylistUrl(playlisturl) {
@@ -149,16 +152,6 @@ function onPlaylistUrl(playlisturl) {
   .then(render);
 }
 
-var restore = hookSetter(animefun, 'danmu', function (danmu) {
-  var text = JSON.stringify(danmu);
-  var title = $('.anime_name h1').text();
-  $('.anime_name').append($('<a>').on('click', function (e) {
-    e.preventDefault();
-    saveTextAsFile(text, "".concat(title, "_\u5F48\u5E55.json"));
-  }).text('把彈幕存成檔案').css('display', 'block'));
-  restore();
-});
-
 //extra: block anti adblock alert
 var orig_alert = alert;
 
@@ -167,25 +160,44 @@ unsafeWindow.alert = function (t) {
   orig_alert(t);
 };
 
-$('.anime_name').append($('<a>').on('click', function (e) {
+var text;
+var title;
+var exportdanmu = $('<a>').on('click', function (e) {
+  e.preventDefault();
+  saveTextAsFile(text, "".concat(title, "_\u5F48\u5E55.json"));
+}).text('把彈幕存成檔案').addClass('anig-tb'); //extra: add a button to download danmu as json file
+
+var restore = hookSetter(animefun, 'danmu', function (danmu) {
+  text = JSON.stringify(danmu);
+  title = $('.anime_name h1').text();
+  restore();
+});
+
+var showans = $('<a>').on('click', function (e) {
   e.preventDefault();
   ani_video.total_time = 1000;
   ani_video.currentTime(ani_video.duration());
-}).text('直接顯示動漫通問題').css('display', 'block')).append($('<a>').on('click', function (e) {
+}).text('直接顯示動漫通問題').addClass('anig-tb');
+var fetchans = $('<a>').on('click', function (e) {
   getTodayAnswer().then(function (ans) {
     alert('答案可能是 ' + ans);
   }).catch(function (err) {
     console.error(err);
     alert('抓取答案失敗，建議去官方粉絲團尋找答案');
   });
-}).text('試著從 blackxblue 小屋中抓取答案(實驗性)').css('display', 'block')).append($('<a>').on('click', function (e) {
+}).text('試著從 blackxblue 小屋中抓取答案(實驗性)').addClass('anig-tb');
+var answerans = $('<a>').on('click', function (e) {
   getTodayAnswer().then(answerQuestion).then(function (result) {
     alert("\u7B54\u984C\u6210\u529F: ".concat(result.gift));
   }).catch(function (err) {
     console.error(err);
     alert("\u56DE\u7B54\u554F\u984C\u5931\u6557: ".concat(err.msg));
   });
-}).text('直接回答問題(實驗性)').css('display', 'block'));
+}).text('直接回答問題(實驗性)').addClass('anig-tb');
+
+var $ct = $('<div>').addClass('anig-ct');
+$ct.append(exportdanmu).append(showans).append(fetchans).append(answerans);
+$('.anime_name').append($ct).append(m3u8container);
 
 function styleInject(css, ref) {
   if ( ref === void 0 ) ref = {};
@@ -214,7 +226,7 @@ function styleInject(css, ref) {
   }
 }
 
-var css = ".test{\n\t\n}";
+var css = ".anig-ct {\n\tdisplay: flex;\n\twidth: 100%;\n\tmargin: 5px;\n}\n\n.anig-tb {\n\tdisplay: inline-block;\n\tpadding: 5px;\n\tbackground: #00B4D8;\n\tcolor: #FFF;\n\tmargin-right: 5px;\n\tborder: 1px solid #BBB;\n}\n\n.tdn{\n\ttext-decoration: none;\n}\n";
 styleInject(css);
 
 }());

@@ -1,3 +1,18 @@
-.test{
-	
+.anig-ct {
+	display: flex;
+	width: 100%;
+	margin: 5px;
+}
+
+.anig-tb {
+	display: inline-block;
+	padding: 5px;
+	background: #00B4D8;
+	color: #FFF;
+	margin-right: 5px;
+	border: 1px solid #BBB;
+}
+
+.tdn{
+	text-decoration: none;
 }
