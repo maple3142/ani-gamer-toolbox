@@ -6,5 +6,6 @@ module.exports = {
 		metablock({
 			file: 'src/meta.json'
 		})
-	]
+	],
+	postcss: { extract: false }
 }
