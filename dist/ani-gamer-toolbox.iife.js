@@ -9,6 +9,8 @@
 // @require     https://cdn.jsdelivr.net/npm/m3u8-parser@4.2.0/dist/m3u8-parser.min.js
 // @grant       GM_xmlhttpRequest
 // @grant       unsafeWindow
+// @grant       GM_getValue
+// @grant       GM_setValue
 // ==/UserScript==
 
 (function () {
@@ -195,8 +197,26 @@ var answerans = $('<a>').on('click', function (e) {
   });
 }).text('直接回答問題(實驗性)').addClass('anig-tb');
 
+var URL$1 = 'https://greasyfork.org/zh-TW/scripts/370155-%E8%B7%B3%E9%81%8E%E5%8B%95%E7%95%AB%E7%98%8B%E5%BB%A3%E5%91%8A';
+var adskip = $('<a>').on('click', function (e) {
+  if (confirm('這需要下載另一個腳本，請問要打開連結嗎?')) {
+    window.open(URL$1, '_blank');
+    GM_setValue('hideadskip', true);
+    adskip.hide();
+  } else {
+    if (confirm('隱藏此按鈕? 重新安裝腳本可以重新顯示此按鈕')) {
+      GM_setValue('hideadskip', true);
+      adskip.hide();
+    }
+  }
+}).text('跳過動畫瘋廣告 ( 宣傳 )').addClass('anig-tb');
+
+if (GM_getValue('hideadskip')) {
+  adskip.hide();
+}
+
 var $ct = $('<div>').addClass('anig-ct');
-$ct.append(exportdanmu).append(showans).append(fetchans).append(answerans);
+$ct.append(exportdanmu).append(showans).append(fetchans).append(answerans).append(adskip);
 $('.anime_name').append($ct).append(m3u8container);
 
 function styleInject(css, ref) {
