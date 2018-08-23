@@ -2,7 +2,7 @@
 // @name        動畫瘋工具箱
 // @namespace   https://blog.maple3142.net/
 // @description 取得動畫的 m3u8 網址，下載彈幕為 json，去除擋廣告的警告訊息
-// @version     0.9.0
+// @version     0.9.1
 // @author      maple3142
 // @match       https://ani.gamer.com.tw/animeVideo.php?sn=*
 // @connect     home.gamer.com.tw
