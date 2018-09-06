@@ -53,19 +53,13 @@ export function getTodayAnswer() {
 	return getCORS(hurl)
 		.then(ht => {
 			const $h = $(ht)
-			const url = $h
-				.find('.TS1')
-				.toArray()
-				.filter(x =>
-					new RegExp(
-						'\\d{2}/' +
-							new Date()
-								.getDate()
-								.toString()
-								.padStart(2, '0')
-					).test(x.textContent)
-				)
-				.map(x => x.getAttribute('href'))[0]
+			const $el = $($h.find('.TS1')[0])
+			const r = /(\d+)\/(\d+)/.exec($el.text())
+			if (!r) throw new Error('Unexpected error.')
+			const [month, date] = r.slice(1).map(Number)
+			const d = new Date()
+			if (month !== d.getMonth() + 1 || date !== d.getDate()) throw new Error('Invalid date.')
+			const url = $el.attr('href')
 			if (!url) throw new Error('No url found.')
 			return getCORS('https://home.gamer.com.tw/' + url)
 		})

@@ -16,6 +16,42 @@
 (function () {
 'use strict';
 
+function _sliceIterator(arr, i) {
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+function _slicedToArray(arr, i) {
+  if (Array.isArray(arr)) {
+    return arr;
+  } else if (Symbol.iterator in Object(arr)) {
+    return _sliceIterator(arr, i);
+  } else {
+    throw new TypeError("Invalid attempt to destructure non-iterable instance");
+  }
+}
+
 var $ = jQuery;
 function hookSetter(obj, prop, cb) {
   var value,
@@ -78,11 +114,18 @@ var hurl = 'https://home.gamer.com.tw/creationCategory.php?owner=blackxblue&c=37
 function getTodayAnswer() {
   return getCORS(hurl).then(function (ht) {
     var $h = $(ht);
-    var url = $h.find('.TS1').toArray().filter(function (x) {
-      return new RegExp('\\d{2}/' + new Date().getDate().toString().padStart(2, '0')).test(x.textContent);
-    }).map(function (x) {
-      return x.getAttribute('href');
-    })[0];
+    var $el = $($h.find('.TS1')[0]);
+    var r = /(\d+)\/(\d+)/.exec($el.text());
+    if (!r) throw new Error('Unexpected error.');
+
+    var _r$slice$map = r.slice(1).map(Number),
+        _r$slice$map2 = _slicedToArray(_r$slice$map, 2),
+        month = _r$slice$map2[0],
+        date = _r$slice$map2[1];
+
+    var d = new Date();
+    if (month !== d.getMonth() + 1 || date !== d.getDate()) throw new Error('Invalid date.');
+    var url = $el.attr('href');
     if (!url) throw new Error('No url found.');
     return getCORS('https://home.gamer.com.tw/' + url);
   }).then(function (ht) {
