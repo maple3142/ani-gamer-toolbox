@@ -2,11 +2,13 @@
 // @name        動畫瘋工具箱
 // @namespace   https://blog.maple3142.net/
 // @description 取得動畫的 m3u8 網址，下載彈幕為 json，去除擋廣告的警告訊息
-// @version     0.9.1
+// @version     0.9.2
 // @author      maple3142
 // @match       https://ani.gamer.com.tw/animeVideo.php?sn=*
 // @connect     home.gamer.com.tw
 // @require     https://cdn.jsdelivr.net/npm/m3u8-parser@4.2.0/dist/m3u8-parser.min.js
+// @require     https://unpkg.com/xfetch-js@0.0.7/xfetch.min.js
+// @require     https://unpkg.com/gmxhr-fetch@0.0.3/gmxhr-fetch.min.js
 // @grant       GM_xmlhttpRequest
 // @grant       unsafeWindow
 // @grant       GM_getValue
@@ -97,22 +99,10 @@ function saveTextAsFile(text, fname) {
   triggerDownload(url, fname);
   URL.revokeObjectURL(url);
 }
-function getCORS(url) {
-  return new Promise(function (res, rej) {
-    GM_xmlhttpRequest({
-      method: 'GET',
-      url: url,
-      responseType: 'text',
-      onload: function onload(r) {
-        return res(r.response);
-      },
-      onerror: rej
-    });
-  });
-}
+var gxf = xf.create(gmfetch);
 var hurl = 'https://home.gamer.com.tw/creationCategory.php?owner=blackxblue&c=370818';
 function getTodayAnswer() {
-  return getCORS(hurl).then(function (ht) {
+  return gxf.get(hurl).text().then(function (ht) {
     var $h = $(ht);
     var $el = $($h.find('.TS1')[0]);
     var r = /(\d+)\/(\d+)/.exec($el.text());
@@ -127,26 +117,29 @@ function getTodayAnswer() {
     if (month !== d.getMonth() + 1 || date !== d.getDate()) throw new Error('Invalid date.');
     var url = $el.attr('href');
     if (!url) throw new Error('No url found.');
-    return getCORS('https://home.gamer.com.tw/' + url);
+    return gxf.get('https://home.gamer.com.tw/' + url).text();
   }).then(function (ht) {
     var $h = $(ht);
     return /A:(\d)/.exec($h.find('.MSG-list8C').find('div').text())[1];
   });
 }
 function getQuestion() {
-  return Promise.resolve($.ajax({
-    url: '/ajax/animeGetQuestion.php',
-    data: 't=' + Date.now()
-  })).then(JSON.parse);
+  return xf.get('/ajax/animeGetQuestion.php', {
+    qs: {
+      t: Date.now()
+    }
+  }).json();
 }
 function answerQuestion(t) {
   return getQuestion().then(function (obj) {
-    return $.ajax({
-      type: 'POST',
-      url: '/ajax/animeAnsQuestion.php',
-      data: 'token=' + obj.token + '&ans=' + t + '&t=' + Date.now()
-    });
-  }).then(JSON.parse).then(function (o) {
+    return xf.post('/ajax/animeAnsQuestion.php', {
+      form: {
+        token: obj.token,
+        ans: t,
+        t: Date.now()
+      }
+    }).json();
+  }).then(function (o) {
     if (o.error || o.msg === '答題錯誤') throw o;
     return o;
   });
