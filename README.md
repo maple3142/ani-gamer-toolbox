@@ -4,6 +4,7 @@
 [GitHub](https://github.com/maple3142/ani-gamer-toolbox)
 
 ![效果](https://i.imgur.com/1kDtN66.png)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmaple3142%2Fani-gamer-toolbox.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fmaple3142%2Fani-gamer-toolbox?ref=badge_shield)
 
 ## 取得動畫 m3u8 網址
 
@@ -42,3 +43,7 @@ ffmpeg 下載指令: `ffmpeg -i "複製來的 m3u8 網址" -c copy "輸出的檔
 ## 範例: 使用 vlc 看 GGO 外傳第二集
 
 ![](https://i.imgur.com/PxUiyhh.png)
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmaple3142%2Fani-gamer-toolbox.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fmaple3142%2Fani-gamer-toolbox?ref=badge_large)
