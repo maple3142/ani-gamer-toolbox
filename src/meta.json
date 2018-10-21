@@ -1,14 +1,14 @@
 {
 	"name": "動畫瘋工具箱",
 	"namespace": "https://blog.maple3142.net/",
-	"version": "0.9.2",
+	"version": "0.9.3",
 	"description": "取得動畫的 m3u8 網址，下載彈幕為 json，去除擋廣告的警告訊息",
 	"author": "maple3142",
 	"match": "https://ani.gamer.com.tw/animeVideo.php?sn=*",
-	"connect": "home.gamer.com.tw",
+	"connect": "api.gamer.com.tw",
 	"require": [
 		"https://cdn.jsdelivr.net/npm/m3u8-parser@4.2.0/dist/m3u8-parser.min.js",
-		"https://unpkg.com/xfetch-js@0.0.7/xfetch.min.js",
+		"https://unpkg.com/xfetch-js@0.2.1/xfetch.min.js",
 		"https://unpkg.com/gmxhr-fetch@0.0.3/gmxhr-fetch.min.js"
 	],
 	"grant": ["GM_xmlhttpRequest", "unsafeWindow", "GM_getValue", "GM_setValue"]
