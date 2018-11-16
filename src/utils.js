@@ -46,7 +46,7 @@ export function getTodayAnswer() {
 		.then(sn => gxf.get('https://api.gamer.com.tw/mobile_app/bahamut/v1/home_creation_detail.php', { qs: { sn } }))
 		.json(({ content }) => {
 			const body = /<body[\s\w"-=]*>([\s\S]*)<\/body>/.exec(content)[1]
-			const ans = /A:(\d)/.exec(body)[1]
+			const ans = /A[:：](\d)/.exec(body)[1]
 			return parseInt(ans)
 		})
 }
