@@ -6,7 +6,8 @@ requirejs.config({
 	baseUrl: '//i2.bahamut.com.tw',
 	waitSeconds: 0,
 	paths: {
-		order: 'js/order'
+		order: 'js/order',
+		videojs: 'js/videojs/video7'
 	},
 	shim: {
 		vastvpaid: {
@@ -17,7 +18,15 @@ requirejs.config({
 requirejs(['order!videojs'], videojs =>
 	hookSetter(videojs.players, 'ani_video', vid => {
 		unsafeWindow.ani_video = vid //EXPOSE
-		hookSetter(vid.K, 'src', onPlaylistUrl)
+
+		const fn = vid.src.bind(vid)
+		vid.src = src => {
+			if (!src) {
+				return fn()
+			}
+			onPlaylistUrl(typeof src === 'string' ? src : src.src)
+			fn(src)
+		}
 	})
 )
 function render(pls) {
