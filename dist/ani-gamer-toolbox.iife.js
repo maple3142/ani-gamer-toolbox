@@ -7,8 +7,8 @@
 // @match       https://ani.gamer.com.tw/animeVideo.php?sn=*
 // @connect     api.gamer.com.tw
 // @require     https://cdn.jsdelivr.net/npm/m3u8-parser@4.2.0/dist/m3u8-parser.min.js
-// @require     https://unpkg.com/xfetch-js@0.2.1/xfetch.min.js
-// @require     https://unpkg.com/gmxhr-fetch@0.0.3/gmxhr-fetch.min.js
+// @require     https://unpkg.com/xfetch-js@0.3.4/xfetch.min.js
+// @require     https://unpkg.com/gmxhr-fetch@0.1.0/gmxhr-fetch.min.js
 // @grant       GM_xmlhttpRequest
 // @grant       unsafeWindow
 // @grant       GM_getValue
@@ -100,7 +100,7 @@
 	function answerQuestion(t) {
 	  return getQuestion().then(function (obj) {
 	    return xf.post('/ajax/animeAnsQuestion.php', {
-	      form: {
+	      urlencoded: {
 	        token: obj.token,
 	        ans: t,
 	        t: Date.now()

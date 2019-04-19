@@ -58,7 +58,7 @@ export function answerQuestion(t) {
 		.then(obj =>
 			xf
 				.post('/ajax/animeAnsQuestion.php', {
-					form: {
+					urlencoded: {
 						token: obj.token,
 						ans: t,
 						t: Date.now()
