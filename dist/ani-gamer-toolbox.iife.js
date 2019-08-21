@@ -2,7 +2,7 @@
 // @name        動畫瘋工具箱
 // @namespace   https://blog.maple3142.net/
 // @description 取得動畫的 m3u8 網址，下載彈幕為 json，去除擋廣告的警告訊息
-// @version     0.9.5
+// @version     0.9.6
 // @author      maple3142
 // @match       https://ani.gamer.com.tw/animeVideo.php?sn=*
 // @connect     api.gamer.com.tw
@@ -29,7 +29,8 @@
 	    },
 	    get: function get() {
 	      return value;
-	    }
+	    },
+	    configurable: true
 	  });
 	  return function () {
 	    return canceled = true;
@@ -258,7 +259,7 @@
 	  }
 	}
 
-	var css = ".anig-ct {\n\tdisplay: flex;\n\twidth: 100%;\n\tmargin: 5px;\n}\n\n.anig-tb {\n\tdisplay: inline-block;\n\tpadding: 5px;\n\tbackground: #00B4D8;\n\tcolor: #FFF;\n\tmargin-right: 5px;\n\tborder: 1px solid #BBB;\n}\n\n.tdn{\n\ttext-decoration: none;\n}\n";
+	var css = ".anig-ct {\r\n\tdisplay: flex;\r\n\twidth: 100%;\r\n\tmargin: 5px;\r\n}\r\n\r\n.anig-tb {\r\n\tdisplay: inline-block;\r\n\tpadding: 5px;\r\n\tbackground: #00B4D8;\r\n\tcolor: #FFF;\r\n\tmargin-right: 5px;\r\n\tborder: 1px solid #BBB;\r\n}\r\n\r\n.tdn{\r\n\ttext-decoration: none;\r\n}\r\n";
 	styleInject(css);
 
 }());
