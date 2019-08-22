@@ -2,7 +2,7 @@
 // @name        動畫瘋工具箱
 // @namespace   https://blog.maple3142.net/
 // @description 取得動畫的 m3u8 網址，下載彈幕為 json，去除擋廣告的警告訊息
-// @version     0.9.6
+// @version     0.9.7
 // @author      maple3142
 // @match       https://ani.gamer.com.tw/animeVideo.php?sn=*
 // @connect     api.gamer.com.tw
@@ -29,8 +29,7 @@
 	    },
 	    get: function get() {
 	      return value;
-	    },
-	    configurable: true
+	    }
 	  });
 	  return function () {
 	    return canceled = true;
@@ -113,25 +112,12 @@
 	  });
 	}
 
-	var m3u8container = $('<div>').addClass('anig-ct'); //in order to get videojs instance
-
-	requirejs.config({
-	  baseUrl: '//i2.bahamut.com.tw',
-	  waitSeconds: 0,
-	  paths: {
-	    order: 'js/order',
-	    videojs: 'js/videojs/video7'
-	  },
-	  shim: {
-	    vastvpaid: {
-	      deps: ['videojs']
-	    }
-	  }
-	});
-	requirejs(['order!videojs'], function (videojs) {
-	  return hookSetter(videojs.players, 'ani_video', function (vid) {
-	    unsafeWindow.ani_video = vid; //EXPOSE
-
+	var m3u8container = $('<div>').addClass('anig-ct');
+	var it = setInterval(function () {
+	  if (typeof videojs !== 'undefined' && videojs.getPlayer('ani_video')) {
+	    clearInterval(it);
+	    var vid = videojs.getPlayer('ani_video');
+	    unsafeWindow.ani_video = vid;
 	    var fn = vid.src.bind(vid);
 
 	    vid.src = function (src) {
@@ -142,8 +128,8 @@
 	      onPlaylistUrl(typeof src === 'string' ? src : src.src);
 	      fn(src);
 	    };
-	  });
-	});
+	  }
+	}, 100);
 
 	function render(pls) {
 	  pls.map(function (pl) {

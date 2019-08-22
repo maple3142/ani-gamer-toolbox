@@ -1,34 +1,25 @@
 import { hookSetter, cvtM3U8_to_playlist, $ } from './utils'
 
 export const m3u8container = $('<div>').addClass('anig-ct')
-//in order to get videojs instance
-requirejs.config({
-	baseUrl: '//i2.bahamut.com.tw',
-	waitSeconds: 0,
-	paths: {
-		order: 'js/order',
-		videojs: 'js/videojs/video7'
-	},
-	shim: {
-		vastvpaid: {
-			deps: ['videojs']
-		}
-	}
-})
-requirejs(['order!videojs'], videojs =>
-	hookSetter(videojs.players, 'ani_video', vid => {
-		unsafeWindow.ani_video = vid //EXPOSE
 
-		const fn = vid.src.bind(vid)
-		vid.src = src => {
+const it = setInterval(() => {
+	if (typeof videojs !== 'undefined' && videojs.getPlayer('ani_video')) {
+		clearInterval(it)
+		const vid = videojs.getPlayer('ani_video')
+		unsafeWindow.ani_video = vid
+		var fn = vid.src.bind(vid)
+
+		vid.src = function(src) {
 			if (!src) {
 				return fn()
 			}
+
 			onPlaylistUrl(typeof src === 'string' ? src : src.src)
 			fn(src)
 		}
-	})
-)
+	}
+}, 100)
+
 function render(pls) {
 	pls.map(pl =>
 		$('<a>')

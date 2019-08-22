@@ -7,8 +7,7 @@ export function hookSetter(obj, prop, cb) {
 			value = v
 			if (!canceled) cb(v)
 		},
-		get: () => value,
-		configurable: true
+		get: () => value
 	})
 	return () => (canceled = true)
 }
