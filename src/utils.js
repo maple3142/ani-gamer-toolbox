@@ -17,7 +17,7 @@ export function cvtM3U8_to_playlist(baseurl) {
 		parser.push(m3u8)
 		parser.end()
 		const pls = parser.manifest.playlists.map(pl => ({
-			url: 'https:' + baseurl + pl.uri,
+			url: new URL(pl.uri, baseurl).href,
 			res: pl.attributes.RESOLUTION
 		}))
 		return pls
@@ -38,12 +38,22 @@ export function saveTextAsFile(text, fname) {
 	URL.revokeObjectURL(url)
 }
 export const gxf = xf.extend({ fetch: gmfetch })
-const hurl = 'https://home.gamer.com.tw/creationCategory.php?owner=blackxblue&c=370818'
+const hurl =
+	'https://home.gamer.com.tw/creationCategory.php?owner=blackxblue&c=370818'
 export function getTodayAnswer() {
 	return gxf
-		.get('https://api.gamer.com.tw/mobile_app/bahamut/v1/home.php', { qs: { owner: 'blackXblue', page: 1 } })
-		.json(({ creation }) => creation.find(x => x.title.includes('動漫通')).sn)
-		.then(sn => gxf.get('https://api.gamer.com.tw/mobile_app/bahamut/v1/home_creation_detail.php', { qs: { sn } }))
+		.get('https://api.gamer.com.tw/mobile_app/bahamut/v1/home.php', {
+			qs: { owner: 'blackXblue', page: 1 }
+		})
+		.json(
+			({ creation }) => creation.find(x => x.title.includes('動漫通')).sn
+		)
+		.then(sn =>
+			gxf.get(
+				'https://api.gamer.com.tw/mobile_app/bahamut/v1/home_creation_detail.php',
+				{ qs: { sn } }
+			)
+		)
 		.json(({ content }) => {
 			const body = /<body[\s\w"-=]*>([\s\S]*)<\/body>/.exec(content)[1]
 			const ans = /A[:：](\d)/.exec(body)[1]
@@ -51,7 +61,9 @@ export function getTodayAnswer() {
 		})
 }
 export function getQuestion() {
-	return xf.get('/ajax/animeGetQuestion.php', { qs: { t: Date.now() } }).json()
+	return xf
+		.get('/ajax/animeGetQuestion.php', { qs: { t: Date.now() } })
+		.json()
 }
 export function answerQuestion(t) {
 	return getQuestion()
